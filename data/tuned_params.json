@@ -1,0 +1,30 @@
+{
+  "b_star": 0.5,
+  "theta_star": 1.25,
+  "window_star": 120,
+  "reference_profile": {
+    "lam": 2.25,
+    "alpha": 0.88,
+    "beta": 0.88,
+    "lam_curv": NaN,
+    "panic": true,
+    "d": 0.2,
+    "r": 0.15,
+    "phi": 1.0,
+    "chase": true,
+    "kappa": 0.25,
+    "f": 3,
+    "top_k": 3
+  },
+  "constraints": {
+    "K": 8,
+    "l": 0.05,
+    "u": 0.35,
+    "class_cap": 0.5,
+    "beta": 0.95
+  },
+  "tune_seed": 2026,
+  "eval_seed": 7777,
+  "n_tune": 300,
+  "n_tune_cfa": 150
+}
