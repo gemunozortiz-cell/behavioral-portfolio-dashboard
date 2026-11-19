@@ -192,7 +192,7 @@ with tab4:
     st.subheader("Nuestra recomendación")
     st.success(f"**{rec['chosen']}**: {rec['reason']}.")
     if not include_cfa:
-        if st.button("Incluir también la re-optimización anual (tarda 1–3 minutos)"):
+        if st.button("Incluir también la re-optimización anual (puede tardar 2–5 minutos)"):
             st.session_state.cfa = True
             st.rerun()
 
