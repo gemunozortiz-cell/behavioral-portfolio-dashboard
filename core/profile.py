@@ -22,6 +22,23 @@ BIAS_QUESTIONS = [
     {"id": "b4", "text": "¿Cada cuánto revisas y ajustas tu portafolio?",
      "options": ["Cada mes", "Cada trimestre", "Una vez al año"]},
 ]
+BIAS_QUESTIONS_EN = [   # mismas preguntas y mismo orden de opciones, en inglés
+    {"id": "b1", "text": "Your portfolio fell 20% over the last three months. What do you do?",
+     "options": ["Sell everything and move to cash", "Sell part of it", "Do nothing", "Take the chance to buy more"]},
+    {"id": "b2", "text": "If you had sold, when would you invest again?",
+     "options": ["When the market rebounds 5% from the bottom", "When it rebounds 15% from the bottom",
+                 "When it recovers everything that was lost"]},
+    {"id": "b3", "text": "One ETF rose 40% last year and your portfolio only 5%. What do you do?",
+     "options": ["Move a large part of my money into that ETF", "Move a little", "Nothing, I stick to my plan"]},
+    {"id": "b4", "text": "How often do you review and adjust your portfolio?",
+     "options": ["Every month", "Every quarter", "Once a year"]},
+]
+
+
+def bias_questions(lang="es"):
+    return BIAS_QUESTIONS_EN if lang == "en" else BIAS_QUESTIONS
+
+
 B1_MAP = [(True, 0.10, 1.0), (True, 0.20, 0.5), (False, None, None), (False, None, None)]  # (pánico, d, φ)
 B2_MAP = [0.05, 0.15, 0.25]   # r
 B3_MAP = [0.50, 0.25, 0.0]    # κ
@@ -34,22 +51,32 @@ DEFAULT_ANSWERS = {
 }
 
 
-def lambda_text(L):
+def lambda_text(L, lang="es"):
+    if lang == "en":
+        return (f"We flip a coin. Heads, you lose {L}% of your portfolio; tails, you win G%. "
+                f"What is the smallest gain G for which you would accept the bet?")
     return (f"Lanzamos una moneda. Si sale cara pierdes el {L}% de tu portafolio; si sale sello ganas G%. "
             f"¿Cuál es la ganancia G más pequeña con la que aceptarías jugar?")
 
 
-def lambda_options(L):
+def lambda_options(L, lang="es"):
     """Lista de (etiqueta, razón G/L); None = no aceptaría."""
-    return [(f"{L * r:g}%", r) for r in LAM_RATIOS] + [("No aceptaría con ninguna de estas", None)]
+    no = "I would not accept any of these" if lang == "en" else "No aceptaría con ninguna de estas"
+    return [(f"{L * r:g}%", r) for r in LAM_RATIOS] + [(no, None)]
 
 
-def alpha_text(G):
+def alpha_text(G, lang="es"):
+    if lang == "en":
+        return (f"You can keep a bet (50%: you win {G}% of your portfolio; 50%: you win nothing) or take a sure "
+                f"gain. What is the smallest sure gain (in %) for which you would give up the bet?")
     return (f"Puedes quedarte con una apuesta (50%: ganas el {G}% de tu portafolio; 50%: no ganas nada) "
             f"o recibir una ganancia segura. ¿Cuál es la ganancia segura mínima (en %) por la que cambiarías la apuesta?")
 
 
-def beta_text(L):
+def beta_text(L, lang="es"):
+    if lang == "en":
+        return (f"You must choose between a bet (50%: you lose {L}% of your portfolio; 50%: you lose nothing) "
+                f"or a sure loss. What is the largest sure loss (in %) you would accept to avoid the bet?")
     return (f"Debes elegir entre una apuesta (50%: pierdes el {L}% de tu portafolio; 50%: no pierdes nada) "
             f"o una pérdida segura. ¿Cuál es la pérdida segura máxima (en %) que aceptarías para evitar la apuesta?")
 
@@ -98,8 +125,10 @@ def estimate_profile(answers=None):
     )
 
 
-def describe_profile(p):
+def describe_profile(p, lang="es"):
     """Frases en lenguaje simple para el cliente."""
+    if lang == "en":
+        return _describe_profile_en(p)
     level = "baja" if p.lam < 1.5 else ("moderada" if p.lam < 2.5 else "alta")
     out = [f"**Aversión a pérdidas {level} (λ = {p.lam:.2f}).** Una pérdida te pesa {p.lam:.1f} veces "
            f"lo que te alegra una ganancia del mismo tamaño."]
@@ -122,6 +151,32 @@ def describe_profile(p):
                    f"{p.kappa:.0%} de tu dinero hacia los activos que más subieron en el último año.")
     if not (p.panic or p.chase):
         out.append("**No detectamos sesgos de comportamiento** en tus respuestas.")
+    return out
+
+
+def _describe_profile_en(p):
+    level = "low" if p.lam < 1.5 else ("moderate" if p.lam < 2.5 else "high")
+    out = [f"**{level.capitalize()} loss aversion (λ = {p.lam:.2f}).** A loss weighs on you {p.lam:.1f} times "
+           f"as much as a gain of the same size pleases you."]
+    if p.alpha < 0.95:
+        out.append(f"**With gains you prefer to lock them in (α = {p.alpha:.2f}).** You would trade a bet for a "
+                   f"sure gain smaller than its expected value.")
+    else:
+        out.append(f"**With gains you are almost risk-neutral (α = {p.alpha:.2f}).**")
+    if p.beta < 0.95:
+        out.append(f"**With losses you tend to take risks (β = {p.beta:.2f}).** You would rather gamble than "
+                   f"accept a sure loss.")
+    else:
+        out.append(f"**With losses you are almost risk-neutral (β = {p.beta:.2f}).**")
+    if p.panic:
+        out.append(f"**Bias detected: panic selling.** You would sell {p.phi:.0%} of your portfolio after a "
+                   f"{p.d:.0%} drop and invest again after a {p.r:.0%} rebound.")
+    if p.chase:
+        each = "every month" if p.f == 1 else f"every {p.f} months"
+        out.append(f"**Bias detected: performance chasing.** {each.capitalize()} you would move {p.kappa:.0%} "
+                   f"of your money into the assets that rose the most over the last year.")
+    if not (p.panic or p.chase):
+        out.append("**We did not detect behavioral biases** in your answers.")
     return out
 
 

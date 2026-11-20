@@ -5,16 +5,26 @@ import pandas as pd
 from .profile import pt_value
 from .simulator import simulate
 from .policies import BH, PFA, CFA, PANIC, CHASE, CLIENT
+from .i18n import policy_name
 
 
-def usd(x):
+def usd(x, lang="es"):
     x = 0.0 if abs(x) < 0.5 else x          # evita "US$ -0"
-    return "US$ " + f"{x:,.0f}".replace(",", ".")
+    s = f"{x:,.0f}"
+    return "US$ " + (s if lang == "en" else s.replace(",", "."))
 
 
 def pt_scores(W_T, W0, W_ref, profile):
     x = (np.asarray(W_T, dtype=float) - W_ref) / W0
     return pt_value(x, profile.alpha, profile.beta, profile.lam)
+
+
+def certainty_equivalent(mean_pt, profile, W0, W_ref=None):
+    """Riqueza segura (US$) cuyo valor PT es igual a `mean_pt`: invierte v y devuelve W_ref + W0·x."""
+    W_ref = W0 if W_ref is None else W_ref
+    m = float(mean_pt)
+    x = m ** (1 / profile.alpha) if m >= 0 else -((-m / profile.lam) ** (1 / profile.beta))
+    return W_ref + W0 * x
 
 
 def summarize(v, level=0.95, n_boot=2000, seed=0):
@@ -53,6 +63,7 @@ def results_table(results, profile, W0, W_ref=None):
             "Valor PT P5": pt["p5"], "Valor PT P95": pt["p95"],
             "IC95% PT (normal)": f"[{pt['ci_low']:.4f}, {pt['ci_high']:.4f}]",
             "IC95% PT (bootstrap)": f"[{pt['boot_low']:.4f}, {pt['boot_high']:.4f}]",
+            "Equivalente cierto (US$)": certainty_equivalent(pt["mean"], profile, W0, W_ref),
             "Riqueza final media": wt["mean"], "Riqueza desv.": wt["std"],
             "Riqueza P5": wt["p5"], "Riqueza P50": wt["p50"], "Riqueza P95": wt["p95"],
             "IC95% riqueza media": f"[{wt['ci_low']:,.0f}, {wt['ci_high']:,.0f}]",
@@ -123,13 +134,15 @@ def tune(factory, grid, scenarios, hist, profile, W0=100_000.0, W_ref=None, cost
     return pd.DataFrame(rows).sort_values("pt_mean", ascending=False).reset_index(drop=True)
 
 
-def recommend(results, profile, W0, W_ref=None, candidates=(BH, PFA, CFA), level=0.95):
+def recommend(results, profile, W0, W_ref=None, candidates=(BH, PFA, CFA), level=0.95, lang="es"):
     """Mayor valor PT medio; si una política más simple no es significativamente peor, se elige la simple.
     `candidates` va ordenado de la más simple a la más compleja."""
     W_ref = W0 if W_ref is None else W_ref
     scores = {n: pt_scores(results[n].terminal, W0, W_ref, profile) for n in candidates if n in results}
     best = max(scores, key=lambda n: scores[n].mean())
-    chosen, reason = best, f"tiene el mayor valor esperado de prospect theory ({scores[best].mean():.4f})"
+    chosen = best
+    reason = (f"it has the highest expected prospect-theory value ({scores[best].mean():.4f})" if lang == "en" else
+              f"tiene el mayor valor esperado de prospect theory ({scores[best].mean():.4f})")
     for n in candidates:
         if n == best:
             break
@@ -138,33 +151,50 @@ def recommend(results, profile, W0, W_ref=None, candidates=(BH, PFA, CFA), level
         d = summarize(scores[n] - scores[best], level)
         if d["ci_low"] <= 0 <= d["ci_high"]:
             chosen = n
-            reason = (f"no es significativamente peor que «{best}» (el IC95% de la diferencia de valor PT, "
-                      f"[{d['ci_low']:.4f}, {d['ci_high']:.4f}], incluye 0) y es más simple de seguir")
+            ci = f"[{d['ci_low']:.4f}, {d['ci_high']:.4f}]"
+            if lang == "en":
+                reason = (f"it is not significantly worse than «{policy_name(best, lang)}» (the 95% CI of the "
+                          f"PT-value difference, {ci}, includes 0) and it is simpler to follow")
+            else:
+                reason = (f"no es significativamente peor que «{best}» (el IC95% de la diferencia de valor PT, "
+                          f"{ci}, incluye 0) y es más simple de seguir")
             break
     return {"chosen": chosen, "best": best, "reason": reason,
             "means": {n: float(v.mean()) for n, v in scores.items()}}
 
 
-def plain_language(results, W0, W_ref=None, reference=PFA):
+def plain_language(results, W0, W_ref=None, reference=PFA, lang="es"):
     """Una frase por política, sin jerga estadística."""
     W_ref = W0 if W_ref is None else W_ref
     ref = results[reference].terminal
+    rname = policy_name(reference, lang)
     out = {}
     for name, res in results.items():
         wt = res.terminal
         p5, p50 = np.percentile(wt, [5, 50])
         below = (wt < W_ref).mean()
-        s = (f"La mitad de los futuros simulados termina con más de {usd(p50)}. En el 5% más malo terminas con "
-             f"{usd(p5)} o menos. Probabilidad de terminar por debajo de tu punto de referencia "
-             f"({usd(W_ref)}): {below:.0%}.")
+        if lang == "en":
+            s = (f"Half of the simulated futures end above {usd(p50, lang)}. In the worst 5% you end with "
+                 f"{usd(p5, lang)} or less. Probability of ending below your reference point "
+                 f"({usd(W_ref, lang)}): {below:.0%}.")
+        else:
+            s = (f"La mitad de los futuros simulados termina con más de {usd(p50)}. En el 5% más malo terminas con "
+                 f"{usd(p5)} o menos. Probabilidad de terminar por debajo de tu punto de referencia "
+                 f"({usd(W_ref)}): {below:.0%}.")
         if name != reference:
             diff = np.median(wt) - np.median(ref)
+            win = (wt > ref + 1e-6).mean()
             if np.allclose(wt, ref):
-                s += f" Da exactamente lo mismo que «{reference}»."
+                s += (f" It gives exactly the same result as «{rname}»." if lang == "en" else
+                      f" Da exactamente lo mismo que «{rname}».")
             elif abs(diff) < 0.005 * np.median(ref):
-                s += f" Su resultado típico es prácticamente el mismo que con «{reference}»."
+                s += (f" Its typical result is practically the same as with «{rname}»." if lang == "en" else
+                      f" Su resultado típico es prácticamente el mismo que con «{rname}».")
+            elif lang == "en":
+                s += (f" Compared with «{rname}», your typical result {'rises' if diff >= 0 else 'falls'} "
+                      f"{usd(abs(diff), lang)}, and you beat it in {win:.0%} of the scenarios.")
             else:
-                s += (f" Frente a «{reference}», tu resultado típico {'sube' if diff >= 0 else 'baja'} "
-                      f"{usd(abs(diff))}, y le ganas en {(wt > ref + 1e-6).mean():.0%} de los escenarios.")
+                s += (f" Frente a «{rname}», tu resultado típico {'sube' if diff >= 0 else 'baja'} "
+                      f"{usd(abs(diff))}, y le ganas en {win:.0%} de los escenarios.")
         out[name] = s
     return out

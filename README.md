@@ -1,5 +1,7 @@
 # Dashboard de portafolio conductual
 
+🌐 **Español** · [English](README.en.md)
+
 [![Abrir el dashboard](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://dashboard-portafolio-conductual.streamlit.app)
 
 Una herramienta para que un asesor financiero haga tres cosas con un cliente:
@@ -8,9 +10,11 @@ Una herramienta para que un asesor financiero haga tres cosas con un cliente:
 2. **Construirle un portafolio** con un MILP media-CVaR resuelto con Gurobi, cuyo límite de riesgo de cola depende de λ.
 3. **Mostrarle cuánto le cuesta su propio comportamiento** a 10 años, simulando mes a mes con el marco de Powell y comparando reglas disciplinadas con reglas que imitan sus sesgos.
 
-👉 **[Abrir el dashboard](https://dashboard-portafolio-conductual.streamlit.app)**. Funciona en el navegador, también desde el celular, sin instalar nada.
+👉 **[Abrir el dashboard](https://dashboard-portafolio-conductual.streamlit.app)**. Funciona en el navegador, también desde el celular, sin instalar nada. El selector de la barra lateral cambia entre español e inglés.
 
-👉 **[Ver el notebook completo con resultados](portafolio_conductual.ipynb)**. GitHub lo muestra con todas sus tablas y gráficos.
+👉 **[Ver el notebook completo con resultados](portafolio_conductual.ipynb)**. GitHub lo muestra con todas sus tablas y gráficos. Cada celda de texto está en español y luego en inglés.
+
+👉 **[Conceptos explicados de forma sencilla (español e inglés)](docs/GUIDE_ES_EN.md)**: PT, λ, α, β, equivalente cierto, bandas y b\*, CVaR frente a media-varianza, PFA/CFA y las reglas del asesor.
 
 ---
 
@@ -19,9 +23,10 @@ Una herramienta para que un asesor financiero haga tres cosas con un cliente:
 | Ruta | Contenido |
 |---|---|
 | [`portafolio_conductual.ipynb`](portafolio_conductual.ipynb) | El informe completo: datos, modelo de Powell, cuestionario, MILP, simulador, políticas, ajuste, evaluación, sensibilidad y recomendación. Incluye las pruebas (`assert`). |
-| [`app.py`](app.py) | El dashboard de Streamlit. |
-| [`core/`](core) | La lógica compartida por el notebook y la app: `profile` (cuestionario), `portfolio` (MILP), `scenarios` (bootstrap), `policies`, `simulator`, `evaluation` y `plots`. |
+| [`app.py`](app.py) | El dashboard de Streamlit (en español e inglés). |
+| [`core/`](core) | La lógica compartida por el notebook y la app: `profile` (cuestionario), `portfolio` (MILP), `scenarios` (bootstrap), `policies`, `simulator`, `evaluation`, `plots` e `i18n` (nombres en inglés). |
 | [`data/`](data) | Retornos mensuales de los 24 ETFs (2008-01 a 2026-10) y parámetros ajustados. |
+| [`docs/GUIDE_ES_EN.md`](docs/GUIDE_ES_EN.md) | Guía bilingüe de los conceptos y resultados. |
 | [`docs/SPEC.md`](docs/SPEC.md) | Especificación: historias de usuario y decisiones de diseño. |
 | [`docs/tickets/`](docs/tickets) | El plan de trabajo en 9 tickets. |
 
@@ -52,16 +57,18 @@ El ajuste usa 300 escenarios con la semilla 2026 (150 para la CFA). La evaluaci�
 
 ## Resultados (cliente de referencia: λ = 2.25, α = β = 0.88, con ambos sesgos)
 
-Riqueza inicial de US$ 100.000, 10 años, 1000 escenarios de evaluación:
+Riqueza inicial de US$ 100.000, 10 años, 1000 escenarios de evaluación. Fuente: sección 8 del notebook, celda `results_table(results, REF, W0)`.
 
-| Política | Valor PT medio [IC95%] | Riqueza final P5 | Mediana | P95 | Caída máx. mediana |
-|---|---|---|---|---|---|
-| Comprar y mantener | 2.286 [2.202, 2.371] | US$ 151.370 | US$ 326.297 | US$ 703.183 | 20.8% |
-| Rebalanceo por bandas (b* = 50%) | 2.287 [2.202, 2.371] | US$ 151.370 | US$ 326.297 | US$ 703.183 | 20.8% |
-| Re-optimización anual (θ* = 1.25, N* = 120) | 1.909 [1.813, 2.005] | US$ 112.667 | US$ 269.775 | US$ 701.072 | 29.6% |
-| Venta por pánico | 1.719 [1.619, 1.819] | US$ 88.853 | US$ 246.408 | US$ 692.301 | 20.4% |
-| Persecución de rendimiento | 1.938 [1.866, 2.010] | US$ 141.501 | US$ 289.580 | US$ 601.937 | 19.8% |
-| Tú tal como eres (pánico + persecución) | 1.513 [1.427, 1.599] | US$ 88.045 | US$ 234.374 | US$ 596.097 | 19.8% |
+| Política | Valor PT medio [IC95%] | Equivalente cierto | Riqueza final P5 | Mediana | P95 | Caída máx. mediana |
+|---|---|---|---|---|---|---|
+| Comprar y mantener | 2.286 [2.202, 2.371] | US$ 355.928 | US$ 151.370 | US$ 326.297 | US$ 703.184 | 20.8% |
+| Rebalanceo por bandas (b* = 50%) | 2.287 [2.202, 2.371] | US$ 355.966 | US$ 151.370 | US$ 326.297 | US$ 703.184 | 20.8% |
+| Re-optimización anual (θ* = 1.25, N* = 120) | 1.909 [1.813, 2.005] | US$ 308.474 | US$ 112.667 | US$ 269.774 | US$ 701.072 | 29.6% |
+| Venta por pánico | 1.719 [1.619, 1.819] | US$ 285.077 | US$ 88.853 | US$ 246.408 | US$ 692.301 | 20.4% |
+| Persecución de rendimiento | 1.938 [1.866, 2.010] | US$ 312.090 | US$ 141.501 | US$ 289.580 | US$ 601.938 | 19.8% |
+| Tú tal como eres (pánico + persecución) | 1.513 [1.427, 1.599] | US$ 260.095 | US$ 88.045 | US$ 234.375 | US$ 596.097 | 19.8% |
+
+**Cómo leerla.** El valor PT es un puntaje de satisfacción, no dólares. El **equivalente cierto** lo pasa a dólares: es el monto seguro que el cliente valora igual que la política con todo su riesgo. Por ejemplo, comprar y mantener le vale a este cliente lo mismo que recibir unos US$ 356.000 seguros en 10 años; "tú tal como eres", unos US$ 260.000.
 
 **Recomendación: comprar y mantener el portafolio del MILP.**
 - **No se distingue de la regla de bandas.** El IC95% de la diferencia pareada de valor PT, [−0.0009, 0.0003], incluye 0, y comprar y mantener es más simple. El ancho de banda óptimo quedó en el máximo de la cuadrícula: con estos datos, rebalancear no agrega valor, porque cortar a los ganadores (tecnología y oro) para volver a los pesos objetivo resta retorno.
@@ -73,6 +80,29 @@ Riqueza inicial de US$ 100.000, 10 años, 1000 escenarios de evaluación:
 - Cambiaría si el cliente no puede seguir la regla en las caídas: ahí lo prioritario es la disciplina, no la regla.
 - Cambiaría si el régimen de mercado difiere de 2008–2026: hay que volver a ajustar con datos nuevos.
 
+## De dónde sale cada resultado
+
+Cada número de este README y del informe lo imprime una celda del notebook. La tabla dice cuál, qué función de `core` lo calcula y en qué archivo queda guardado.
+
+| Resultado | Notebook: sección y celda | Función | Guardado en |
+|---|---|---|---|
+| 24 ETFs, 226 retornos mensuales (2008-01 a 2026-10) | §1, celda `from core.data import …` | `download_prices`, `monthly_returns` ([`core/data.py`](core/data.py)) | [`data/monthly_returns.csv`](data/monthly_returns.csv) |
+| Retorno, volatilidad y mejor/peor mes por ETF | §1, tabla `summary` | — | — |
+| Perfil de las respuestas por defecto (λ = 2, α = β = 0.76) | §3, celda `example = estimate_profile(DEFAULT_ANSWERS)` | `estimate_profile` ([`core/profile.py`](core/profile.py)) | — |
+| Cliente de referencia (λ = 2.25, α = β = 0.88, ambos sesgos) | §3, celda `REF = Profile(panic=True, chase=True)` | `Profile` | `data/tuned_params.json` (`reference_profile`) |
+| Portafolio de referencia (XLK 35%, GLD 35%, …), retorno de 13.42%, CVaR de 7.50% | §4, celda `port_ref = build_portfolio(REF, rets, CONS)` | `build_portfolio` ([`core/portfolio.py`](core/portfolio.py)) | — |
+| λ → límite de CVaR, retorno y número de activos (λ = 1; 2.25; 4; 5) | §4, tabla `frontier` de la celda "Pruebas del MILP" | `build_portfolio`, `cvar_limit` | — |
+| b* = 50%, valor PT y costos de cada banda | §7, tabla y gráfico `pfa_tab = tune(…)` | `tune` ([`core/evaluation.py`](core/evaluation.py)) | [`data/tuned_params.json`](data/tuned_params.json) |
+| θ* = 1.25, N* = 120 y el mapa de calor de la CFA | §7, tabla y gráfico `cfa_tab = tune(…)` | `tune` | `data/tuned_params.json` |
+| Tabla principal: valor PT, IC, equivalente cierto, P5/P50/P95, caída, costos, rotación | §8, celda `table = results_table(results, REF, W0)` | `results_table`, `certainty_equivalent` | — |
+| Diferencias pareadas frente a las bandas (IC [−0.0009, 0.0003]) y probabilidad de superarlas | §8, tabla `paired = paired_comparison(…)` | `paired_comparison` | — |
+| Costo de cada conducta (US$ 91.923 en la mediana, 88% de los escenarios) | §8, tabla `costs = behavior_costs(…)` | `behavior_costs` | — |
+| Gráfico de abanico y cajas de la riqueza final | §8, celda `fan_figure` / `terminal_figure` | [`core/plots.py`](core/plots.py) | — |
+| Sensibilidad (λ = 1, λ = 4, 50 pb, meta de 4%) | §9, tabla `sens` | `recommend` | — |
+| Recomendación final y cuándo cambiaría | §9, celda `rec = recommend(results, REF, W0, W0, CANDIDATES)` | `recommend` | — |
+
+**Los números del dashboard son distintos a propósito.** La app simula **500** escenarios (semilla 7777) para **quien responde el cuestionario** (por defecto λ = 2, α = β = 0.76 y sin sesgos), así que sus montos no coinciden con los del cliente de referencia del informe. Las funciones y la regla de recomendación son las mismas.
+
 ## Cómo usar el dashboard
 
 1. **Cuestionario:** responde las 11 preguntas y pulsa *Calcular mi perfil*.
@@ -80,7 +110,7 @@ Riqueza inicial de US$ 100.000, 10 años, 1000 escenarios de evaluación:
 3. **Mi futuro:** gráfico de abanico de 500 futuros simulados, con disciplina y "tal como eres".
 4. **Comparar reglas:** la recomendación, el costo en dinero de cada sesgo y la comparación en frases simples.
 
-En la barra lateral se cambian la riqueza inicial y la meta. El asesor puede ajustar el máximo de activos, las posiciones mínima y máxima, el tope por clase, λ, α, β y los sesgos.
+En la barra lateral se cambian el idioma, la riqueza inicial y la meta. El asesor puede ajustar el máximo de activos, las posiciones mínima y máxima, el tope por clase, λ, α, β y los sesgos.
 
 ## Cómo reproducirlo en tu computador
 
