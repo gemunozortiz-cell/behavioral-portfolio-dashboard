@@ -124,7 +124,9 @@ class AnnualReoptimization(Policy):
 
 
 class PanicSelling(Policy):
-    """Conductual: tras una caída d vende la fracción φ a efectivo; vuelve tras un rebote r desde el mínimo."""
+    """Conductual: tras una caída d de su riqueza vende la fracción φ a efectivo; vuelve cuando el MERCADO rebota r
+    desde su mínimo. El mercado es un índice del portafolio disciplinado w*: la riqueza del cliente no sirve para
+    medir el rebote, porque mientras está en efectivo casi no se mueve."""
     klass = "Conductual"
 
     def __init__(self, base, d, r, phi, cash_idx, name=PANIC):
@@ -139,7 +141,9 @@ class PanicSelling(Policy):
         self.base.reset(S, N)
         self.in_cash = np.zeros(S, dtype=bool)
         self.ref_peak = np.full(S, -np.inf)
-        self.trough = np.full(S, np.inf)
+        self.market_w = self.base.target_weights().copy()   # w*: pesos del índice de mercado
+        self.market = np.ones(S)                            # índice de mercado I_t (I_0 = 1)
+        self.trough = np.full(S, np.inf)                    # mínimo del índice desde que vendió
         self.e_cash = np.zeros(N)
         self.e_cash[self.cash_idx] = 1.0
 
@@ -148,12 +152,15 @@ class PanicSelling(Policy):
 
     def decide(self, st):
         W = st.W
+        if st.t > 0:
+            self.market = self.market * (1.0 + (self.market_w * st.recent[:, -1, :]).sum(axis=1))
+        M = self.market
         inv = ~self.in_cash
         self.ref_peak[inv] = np.maximum(self.ref_peak[inv], W[inv])
-        self.trough[self.in_cash] = np.minimum(self.trough[self.in_cash], W[self.in_cash])
+        self.trough[self.in_cash] = np.minimum(self.trough[self.in_cash], M[self.in_cash])
         drawdown = 1.0 - W / self.ref_peak
         trigger = inv & (drawdown >= self.d)
-        reenter = self.in_cash & (W >= self.trough * (1.0 + self.r))
+        reenter = self.in_cash & (M >= self.trough * (1.0 + self.r))
         hold = self.in_cash & ~reenter
 
         out = self.base.decide(st)
@@ -164,7 +171,7 @@ class PanicSelling(Policy):
             out[reenter] = self.base.target_weights()[reenter]
 
         self.in_cash[trigger] = True
-        self.trough[trigger] = W[trigger]
+        self.trough[trigger] = M[trigger]
         self.in_cash[reenter] = False
         self.ref_peak[reenter] = W[reenter]
         return out

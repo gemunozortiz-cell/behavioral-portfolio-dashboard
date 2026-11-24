@@ -61,24 +61,32 @@ Riqueza inicial de US$ 100.000, 10 años, 1000 escenarios de evaluación. Fuente
 
 | Política | Valor PT medio [IC95%] | Equivalente cierto | Riqueza final P5 | Mediana | P95 | Caída máx. mediana |
 |---|---|---|---|---|---|---|
-| Comprar y mantener | 2.286 [2.202, 2.371] | US$ 355.928 | US$ 151.370 | US$ 326.297 | US$ 703.184 | 20.8% |
-| Rebalanceo por bandas (b* = 50%) | 2.287 [2.202, 2.371] | US$ 355.966 | US$ 151.370 | US$ 326.297 | US$ 703.184 | 20.8% |
-| Re-optimización anual (θ* = 1.25, N* = 120) | 1.909 [1.813, 2.005] | US$ 308.474 | US$ 112.667 | US$ 269.774 | US$ 701.072 | 29.6% |
-| Venta por pánico | 1.719 [1.619, 1.819] | US$ 285.077 | US$ 88.853 | US$ 246.408 | US$ 692.301 | 20.4% |
-| Persecución de rendimiento | 1.938 [1.866, 2.010] | US$ 312.090 | US$ 141.501 | US$ 289.580 | US$ 601.938 | 19.8% |
-| Tú tal como eres (pánico + persecución) | 1.513 [1.427, 1.599] | US$ 260.095 | US$ 88.045 | US$ 234.375 | US$ 596.097 | 19.8% |
+| Comprar y mantener | 2.286 [2.202, 2.371] | US$ 355.928 | US$ 151.370 | US$ 326.297 | US$ 703.185 | 20.8% |
+| Rebalanceo por bandas (b* = 50%) | 2.287 [2.202, 2.371] | US$ 355.966 | US$ 151.370 | US$ 326.297 | US$ 703.185 | 20.8% |
+| Re-optimización anual (θ* = 1.25, N* = 120) | 1.909 [1.813, 2.005] | US$ 308.474 | US$ 112.667 | US$ 269.775 | US$ 701.073 | 29.6% |
+| Venta por pánico | 2.126 [2.040, 2.213] | US$ 335.678 | US$ 133.340 | US$ 304.734 | US$ 699.368 | 20.9% |
+| Persecución de rendimiento | 1.938 [1.866, 2.010] | US$ 312.090 | US$ 141.501 | US$ 289.581 | US$ 601.939 | 19.8% |
+| Tú tal como eres (pánico + persecución) | 1.830 [1.755, 1.905] | US$ 298.683 | US$ 127.025 | US$ 272.656 | US$ 599.908 | 19.8% |
 
-**Cómo leerla.** El valor PT es un puntaje de satisfacción, no dólares. El **equivalente cierto** lo pasa a dólares: es el monto seguro que el cliente valora igual que la política con todo su riesgo. Por ejemplo, comprar y mantener le vale a este cliente lo mismo que recibir unos US$ 356.000 seguros en 10 años; "tú tal como eres", unos US$ 260.000.
+**Cómo leerla.** El valor PT es un puntaje de satisfacción, no dólares. El **equivalente cierto** lo pasa a dólares: es el monto seguro que el cliente valora igual que la política con todo su riesgo. Por ejemplo, comprar y mantener le vale a este cliente lo mismo que recibir unos US$ 356.000 seguros en 10 años; "tú tal como eres", unos US$ 299.000.
 
 **Recomendación: comprar y mantener el portafolio del MILP.**
-- **No se distingue de la regla de bandas.** El IC95% de la diferencia pareada de valor PT, [−0.0009, 0.0003], incluye 0, y comprar y mantener es más simple. El ancho de banda óptimo quedó en el máximo de la cuadrícula: con estos datos, rebalancear no agrega valor, porque cortar a los ganadores (tecnología y oro) para volver a los pesos objetivo resta retorno.
-- **Re-optimizar cada año es significativamente peor.** Rota mucho el portafolio y persigue la ventana reciente.
-- **El comportamiento pesa más que la regla.** Con sus dos sesgos, el cliente de referencia pierde **US$ 91.923 en la mediana** frente a la disciplina (IC95% del costo medio: US$ 83.944 a 96.493) y termina peor en el 88% de los escenarios.
+- **No se distingue de la regla de bandas.** El IC95% de la diferencia pareada de valor PT, [−0.0009, 0.0003], incluye 0, y comprar y mantener es más simple. El ancho de banda óptimo quedó en el máximo de la cuadrícula: con estos datos, rebalancear no agrega valor. Al no rebalancear crece el peso del activo de mayor retorno (XLK pasa de 35% a 50% en la mediana; el oro baja de 35% a 24%), y la función objetivo casi no castiga el riesgo extra, porque solo el 0.4% de los futuros termina en pérdida.
+- **Re-optimizar cada año es significativamente peor en esta evaluación.** Ojo: la evaluación arma el portafolio con la misma historia de la que sortea los futuros, y eso favorece a comprar y mantener (ver la prueba fuera de muestra).
+- **El comportamiento cuesta caro.** Con sus dos sesgos, el cliente de referencia pierde **US$ 53.641 en la mediana** (16%) frente a la disciplina (IC95% del costo medio: US$ 53.240 a 61.201) y termina peor en el 86% de los escenarios. Perseguir rendimiento (US$ 36.716) cuesta más que el pánico (US$ 21.563).
 
 **Cuándo cambiaría:**
 - Con λ = 1, λ = 4, costos de 50 pb o una meta de 4% anual, la recomendación no cambió en el análisis de sensibilidad.
 - Cambiaría si el cliente no puede seguir la regla en las caídas: ahí lo prioritario es la disciplina, no la regla.
-- Cambiaría si el régimen de mercado difiere de 2008–2026: hay que volver a ajustar con datos nuevos.
+- **Cambia si el futuro no se parece a la historia con que se armó el portafolio.** En la prueba fuera de muestra (portafolio con datos anteriores al corte, 300 futuros sorteados de los posteriores), la re-optimización anual le gana a comprar y mantener en los tres cortes:
+
+  | Corte | Comprar y mantener (PT · mediana) | Re-optimización (θ*, N*) | Re-optimización sin ajustar (θ = 1, N = 60) |
+  |---|---|---|---|
+  | 2014-12 | 1.320 · US$ 221.312 | 1.947 · US$ 285.061 | 1.980 · US$ 294.196 |
+  | 2017-12 | 2.114 · US$ 290.625 | 2.669 · US$ 340.271 | 3.018 · US$ 384.065 |
+  | 2019-12 | 1.984 · US$ 272.143 | 3.271 · US$ 415.158 | 3.639 · US$ 445.248 |
+
+- **El riesgo sube si nunca se revisa.** Después de 10 años, los pesos de comprar y mantener superan el límite de CVaR del cliente en el 79% de los futuros (mediana 7.85% contra 7.50%). Conviene una revisión anual.
 
 ## De dónde sale cada resultado
 
@@ -96,9 +104,11 @@ Cada número de este README y del informe lo imprime una celda del notebook. La 
 | θ* = 1.25, N* = 120 y el mapa de calor de la CFA | §7, tabla y gráfico `cfa_tab = tune(…)` | `tune` | `data/tuned_params.json` |
 | Tabla principal: valor PT, IC, equivalente cierto, P5/P50/P95, caída, costos, rotación | §8, celda `table = results_table(results, REF, W0)` | `results_table`, `certainty_equivalent` | — |
 | Diferencias pareadas frente a las bandas (IC [−0.0009, 0.0003]) y probabilidad de superarlas | §8, tabla `paired = paired_comparison(…)` | `paired_comparison` | — |
-| Costo de cada conducta (US$ 91.923 en la mediana, 88% de los escenarios) | §8, tabla `costs = behavior_costs(…)` | `behavior_costs` | — |
+| Costo de cada conducta (US$ 53.641 en la mediana, 86% de los escenarios) | §8, tabla `costs = behavior_costs(…)` | `behavior_costs` | — |
 | Gráfico de abanico y cajas de la riqueza final | §8, celda `fan_figure` / `terminal_figure` | [`core/plots.py`](core/plots.py) | — |
 | Sensibilidad (λ = 1, λ = 4, 50 pb, meta de 4%) | §9, tabla `sens` | `recommend` | — |
+| Diagnóstico: futuros en pérdida (0.4%), deriva de los pesos, CVaR final (79% sobre el límite) | §9, celda `# Diagnóstico` | `pt_scores`, `hist_cvar` | — |
+| Prueba fuera de muestra (tres cortes) | §9, tabla `oos` | `evaluate`, `summarize` | — |
 | Recomendación final y cuándo cambiaría | §9, celda `rec = recommend(results, REF, W0, W0, CANDIDATES)` | `recommend` | — |
 
 **Los números del dashboard son distintos a propósito.** La app simula **500** escenarios (semilla 7777) para **quien responde el cuestionario** (por defecto λ = 2, α = β = 0.76 y sin sesgos), así que sus montos no coinciden con los del cliente de referencia del informe. Las funciones y la regla de recomendación son las mismas.
@@ -126,11 +136,13 @@ streamlit run app.py                 # el dashboard
 jupyter notebook portafolio_conductual.ipynb   # el informe (requiere: pip install notebook)
 ```
 
-Ejecutar el notebook completo tarda unos 15 minutos. Vuelve a descargar los datos con yfinance y regenera `core/`, `app.py` y `data/`. Gurobi funciona con la licencia restringida que viene con `pip install gurobipy`: el modelo más grande tiene unas 275 variables, dentro del límite.
+Ejecutar el notebook completo tarda unos 20 minutos. Vuelve a descargar los datos con yfinance y regenera `core/`, `app.py` y `data/`. Gurobi funciona con la licencia restringida que viene con `pip install gurobipy`: el modelo más grande tiene unas 275 variables, dentro del límite.
 
 ## Limitaciones
 
-- El bootstrap y el MILP usan la misma historia (2008–2026), así que los resultados reflejan ese periodo, en el que la tecnología y el oro fueron especialmente buenos.
+- El bootstrap y el MILP usan la misma historia (2008–2026), así que los resultados reflejan ese periodo, muy bueno para la tecnología (XLK: 18.6% anual).
+- En la prueba fuera de muestra los futuros salen de un periodo corto (82 a 142 meses), y eso favorece a la CFA.
+- θ* y N* quedaron en el borde de su cuadrícula.
 - El cuestionario no está validado con personas reales.
 - No se modelan impuestos, aportes, retiros ni inflación, ni la ponderación de probabilidades de prospect theory acumulativa.
 - Es una herramienta educativa, no una recomendación de inversión.

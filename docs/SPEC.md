@@ -151,7 +151,7 @@ Un notebook único y reproducible que:
   - w_t: pesos después de la deriva del mes, en fracción.
   - P_t: máximo de riqueza hasta la fecha, en USD.
   - H_t: retornos de los últimos 12 meses por activo, que combinan historia previa y meses simulados.
-  - Para la política de pánico: m_t ∈ {invertido, en efectivo} y el mínimo M_t desde la salida, en USD.
+  - Para la política de pánico: m_t ∈ {invertido, en efectivo} y el mínimo M_t, desde la salida, del índice de mercado I_t (portafolio w*, I_0 = 1).
   - Para la CFA: pesos objetivo vigentes y meses desde el último re-solve.
 - **Decisión x_t**: los montos que se compran o venden de cada activo (USD). De forma equivalente, los pesos después de operar, w⁺_t.
 - **Información exógena** W_{t+1}: el vector R_{t+1} de retornos del mes, sorteado por el bootstrap.
@@ -175,7 +175,7 @@ Todas cumplen la misma interfaz: reciben el estado y los parámetros y devuelven
 | Comprar y mantener | Baseline | Comprar el portafolio de la Parte 2 en t = 0 y no operar más | — |
 | Bandas | PFA | Si algún \|w_i − w*_i\| > b, rebalancear todo a w* | b ∈ {2, 3, 5, 7.5, 10, 15, 20}% **[R2]** |
 | Re-solve anual | CFA | Cada 12 meses, resolver de nuevo el MILP con c(λ)·θ sobre una ventana de los últimos N meses (historia previa + simulados) y llevar el portafolio a la solución | θ ∈ {0.75, 1, 1.25}, N ∈ {36, 60, 120} **[R2]** |
-| Venta por pánico | Conductual | Encima de la política disciplinada: si la caída desde P llega a d, vender una fracción φ a BIL; volver a invertir cuando W rebote r desde el mínimo M | d, r, φ (del cuestionario) |
+| Venta por pánico | Conductual | Encima de la política disciplinada: si la caída desde P llega a d, vender una fracción φ a BIL; volver a invertir cuando el índice de mercado I (portafolio w*) rebote r desde su mínimo M | d, r, φ (del cuestionario) |
 | Persecución de rendimiento | Conductual | Encima de la política disciplinada: cada f meses, mover una fracción κ hacia los 3 activos con mejor retorno a 12 meses | κ, f, top-k (del cuestionario) |
 | Cliente como es | Conductual combinada | Aplica los sesgos que el cuestionario detectó | — |
 

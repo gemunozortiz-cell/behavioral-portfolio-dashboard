@@ -144,7 +144,7 @@ def describe_profile(p, lang="es"):
         out.append(f"**Con pérdidas eres casi neutral al riesgo (β = {p.beta:.2f}).**")
     if p.panic:
         out.append(f"**Sesgo detectado: venta por pánico.** Venderías el {p.phi:.0%} de tu portafolio tras una "
-                   f"caída de {p.d:.0%} y volverías a invertir tras un rebote de {p.r:.0%}.")
+                   f"caída de {p.d:.0%} y volverías a invertir cuando el mercado rebote {p.r:.0%}.")
     if p.chase:
         each = "cada mes" if p.f == 1 else f"cada {p.f} meses"
         out.append(f"**Sesgo detectado: persecución de rendimiento.** {each.capitalize()} moverías el "
@@ -170,7 +170,7 @@ def _describe_profile_en(p):
         out.append(f"**With losses you are almost risk-neutral (β = {p.beta:.2f}).**")
     if p.panic:
         out.append(f"**Bias detected: panic selling.** You would sell {p.phi:.0%} of your portfolio after a "
-                   f"{p.d:.0%} drop and invest again after a {p.r:.0%} rebound.")
+                   f"{p.d:.0%} drop and invest again once the market rebounds {p.r:.0%}.")
     if p.chase:
         each = "every month" if p.f == 1 else f"every {p.f} months"
         out.append(f"**Bias detected: performance chasing.** {each.capitalize()} you would move {p.kappa:.0%} "

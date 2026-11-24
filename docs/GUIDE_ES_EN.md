@@ -155,7 +155,7 @@ Para el cliente de referencia, la simulación hace dos cosas:
 
 Si el cuestionario no detecta sesgos, "tú tal como eres" es igual a la regla disciplinada.
 
-**Resultado:** la disciplina termina típicamente con US$ 326.297; "tú tal como eres", con US$ 234.375. **Tus hábitos cuestan unos US$ 92.000.**
+**Resultado:** la disciplina termina típicamente con US$ 326.297; "tú tal como eres", con US$ 272.656. **Tus hábitos cuestan unos US$ 53.600** (16%).
 
 🇬🇧 It is **the same investment, managed with your real habits**, the ones the questionnaire detected. The name says it: it is a mirror comparing the "disciplined you" with the "real you".
 
@@ -166,7 +166,7 @@ For the reference client, the simulation does two things:
 
 If no biases are detected, "you as you are" equals the disciplined rule.
 
-**Result:** discipline typically ends with US$ 326,297; "you as you are", with US$ 234,375. **Your habits cost about US$ 92,000.**
+**Result:** discipline typically ends with US$ 326,297; "you as you are", with US$ 272,656. **Your habits cost about US$ 53,600** (16%).
 
 📍 Notebook §3 (`REF = Profile(panic=True, chase=True)`) y / and §8 (`costs = behavior_costs(…)`, columna / column "Costo en la mediana").
 
@@ -208,7 +208,7 @@ The band is measured in **percentage points**. With b = 50%, technology would ha
 
 🇪🇸 El asterisco (\*) significa **"el mejor valor encontrado"**. Probamos 10 bandas (2%, 3%, 5%, 7,5%, 10%, 15%, 20%, 25%, 35% y 50%) en 300 futuros de práctica, y elegimos la que dio el mayor valor PT medio. Ganó **b\* = 50%**, la más ancha.
 
-**Qué significa:** con estos datos, **rebalancear no ayuda**. En 2008–2026 la tecnología y el oro subieron casi sin parar. Rebalancear obliga a venderlos para volver a 35%, y así te pierdes parte de su subida. Además cada operación cuesta 0,1%.
+**Qué significa:** con estos datos, **rebalancear no ayuda**. Si no rebalanceas, crece el peso del activo que más rindió: la tecnología pasa de 35% a 50% en el futuro típico, y el oro baja de 35% a 24%. Rebalancear obliga a vender tecnología para volver a 35%, y así te pierdes parte de su retorno. A cambio, sin rebalancear sube el riesgo. Además cada operación cuesta 0,1%.
 
 **Cómo decirlo:** "La regla de bandas aprendió sola que, con estos datos, lo mejor es no tocar el portafolio."
 
@@ -216,7 +216,7 @@ Lo mismo pasa con los otros asteriscos: **θ\* = 1,25** y **N\* = 120 meses** so
 
 🇬🇧 The asterisk (\*) means **"the best value found"**. We tried 10 bands (2%, 3%, 5%, 7.5%, 10%, 15%, 20%, 25%, 35% and 50%) on 300 practice futures and picked the one with the highest mean PT value. The winner was **b\* = 50%**, the widest.
 
-**What it means:** with this data, **rebalancing does not help**. In 2008–2026 technology and gold rose almost nonstop. Rebalancing forces you to sell them back to 35%, so you miss part of the rally. Each trade also costs 0.1%.
+**What it means:** with this data, **rebalancing does not help**. If you do not rebalance, the weight of the best-performing asset grows: technology goes from 35% to 50% in the typical future, and gold falls from 35% to 24%. Rebalancing forces you to sell technology back to 35%, so you miss part of its return. In exchange, without rebalancing risk rises. Each trade also costs 0.1%.
 
 **How to say it:** "The band rule learned by itself that, with this data, the best thing is to leave the portfolio alone."
 
@@ -239,15 +239,15 @@ The same goes for the other asterisks: **θ\* = 1.25** and **N\* = 120 months** 
 4. Buscamos la ganancia segura que da exactamente esa satisfacción: x^0,88 = 2,286, así que **x = 2,286^(1/0,88) = 2,56**, una ganancia de 256%.
 5. En dinero: 100.000 + 2,56 × 100.000 = **≈ US$ 356.000**.
 
-**Mismo cálculo para "tú tal como eres":** 1,513^(1/0,88) = 1,60, lo que da **≈ US$ 260.000**. La diferencia, unos **US$ 96.000**, es lo que te cuestan tus sesgos medido en tu propia satisfacción.
+**Mismo cálculo para "tú tal como eres":** 1,830^(1/0,88) = 1,99, lo que da **≈ US$ 299.000**. La diferencia, unos **US$ 57.000**, es lo que te cuestan tus sesgos medido en tu propia satisfacción.
 
 | Política | Valor PT | Equivalente seguro |
 |---|---|---|
 | Comprar y mantener / Bandas | 2,286 | ≈ US$ 356.000 |
 | Persecución | 1,938 | ≈ US$ 312.000 |
 | Re-optimización anual | 1,909 | ≈ US$ 308.000 |
-| Pánico | 1,719 | ≈ US$ 285.000 |
-| Tú tal como eres | 1,513 | ≈ US$ 260.000 |
+| Pánico | 2,126 | ≈ US$ 336.000 |
+| Tú tal como eres | 1,830 | ≈ US$ 299.000 |
 
 **Pregunta trampa: ¿por qué 356.000 es más que la mediana (326.000) y menos que la media (363.000)?**
 - **Menos que la media:** el cliente prefiere lo seguro (α < 1) y le duelen los futuros con pérdida (λ). Por eso acepta menos dinero seguro que el promedio incierto.
@@ -262,7 +262,7 @@ The same goes for the other asterisks: **θ\* = 1.25** and **N\* = 120 months** 
 4. We find the sure gain with exactly that satisfaction: x^0.88 = 2.286, so **x = 2.286^(1/0.88) = 2.56**, a 256% gain.
 5. In money: 100,000 + 2.56 × 100,000 = **≈ US$ 356,000**.
 
-**Same calculation for "you as you are":** 1.513^(1/0.88) = 1.60, which gives **≈ US$ 260,000**. The difference, about **US$ 96,000**, is what your biases cost you, measured in your own satisfaction.
+**Same calculation for "you as you are":** 1.830^(1/0.88) = 1.99, which gives **≈ US$ 299,000**. The difference, about **US$ 57,000**, is what your biases cost you, measured in your own satisfaction.
 
 **Trick question: why is 356,000 above the median (326,000) but below the mean (363,000)?**
 - **Below the mean:** the client prefers certainty (α < 1) and dislikes the losing futures (λ). So they accept less sure money than the uncertain average.
@@ -336,7 +336,7 @@ If CVaR is 7.5%, then "in a really bad month, you lose 7.5% on average".
 - acciones de EE.UU. = XLK 35% + XLV 10% + XLY 5% = **50%**;
 - activos reales = GLD 35% + SLV 8,7% + VNQ 6,3% = **50%**.
 
-Y XLK y GLD tocan el máximo de 35%. Sin las reglas del asesor, el optimizador habría puesto aún más en tecnología y oro. **Las reglas son las que evitan un portafolio todavía más concentrado.**
+Y XLK y GLD tocan el máximo de 35%. Sin las reglas del asesor, el optimizador habría puesto 64% en tecnología, 23% en oro y 12% en salud. **Las reglas son las que evitan un portafolio todavía más concentrado.**
 
 🇬🇧 These are the optimizer's **constraints**: common-sense rules an advisor would impose. In the dashboard you change them in the sidebar.
 
@@ -358,7 +358,7 @@ Y XLK y GLD tocan el máximo de 35%. Sin las reglas del asesor, el optimizador h
 - US equities = XLK 35% + XLV 10% + XLY 5% = **50%**;
 - real assets = GLD 35% + SLV 8.7% + VNQ 6.3% = **50%**.
 
-XLK and GLD also hit the 35% maximum. Without the advisor's rules, the optimizer would have put even more into technology and gold. **The rules are what prevent an even more concentrated portfolio.**
+XLK and GLD also hit the 35% maximum. Without the advisor's rules, the optimizer would have put 64% in technology, 23% in gold and 12% in health care. **The rules are what prevent an even more concentrated portfolio.**
 
 ---
 
@@ -381,7 +381,7 @@ XLK and GLD also hit the 35% maximum. Without the advisor's rules, the optimizer
 - **θ (theta):** multiplica el límite de riesgo. θ = 1,25 permite 25% más de riesgo de cola que el límite base.
 - **N:** cuántos meses de historia mira (36, 60 o 120).
 
-Ganó **θ\* = 1,25 y N\* = 120**. Aun así, la CFA fue **la peor regla disciplinada**: cada año cambia el portafolio persiguiendo lo que funcionó recientemente, rota 48% al año y tiene la caída típica más grande (29,6%).
+Ganó **θ\* = 1,25 y N\* = 120**. En la evaluación principal, la CFA fue **la peor regla disciplinada**: rota 48% al año y tiene la caída típica más grande (29,6%). Pero esa evaluación arma el portafolio con la misma historia de la que sortea los futuros, y eso favorece a comprar y mantener. **En la prueba fuera de muestra, la CFA le ganó a comprar y mantener en las tres fechas de corte.**
 
 **Por qué no usamos VFA ni DLA:** el estado tiene 24 pesos más 12 meses de historia. Estimar el valor del futuro sobre algo tan grande (VFA), o simular hacia adelante en cada mes de cada uno de los 1000 escenarios (DLA), era demasiado costoso y difícil de explicar a un cliente.
 
@@ -398,7 +398,7 @@ Ganó **θ\* = 1,25 y N\* = 120**. Aun así, la CFA fue **la peor regla discipli
 - **θ (theta):** scales the risk limit. θ = 1.25 allows 25% more tail risk than the base limit.
 - **N:** how many months of history it uses (36, 60 or 120).
 
-The winners were **θ\* = 1.25 and N\* = 120**. Even so, the CFA was **the worst disciplined rule**: every year it changes the portfolio chasing what worked recently, turns over 48% a year and has the largest typical drawdown (29.6%).
+The winners were **θ\* = 1.25 and N\* = 120**. In the main evaluation the CFA was **the worst disciplined rule**: it turns over 48% a year and has the largest typical drawdown (29.6%). But that evaluation builds the portfolio with the same history the futures are drawn from, which favors buy and hold. **In the out-of-sample test, the CFA beat buy and hold at all three cut dates.**
 
 **Why no VFA or DLA:** the state has 24 weights plus 12 months of history. Estimating the value of the future over something that large (VFA), or simulating ahead at every month of each of the 1,000 scenarios (DLA), was too costly and hard to explain to a client.
 
@@ -408,13 +408,13 @@ The winners were **θ\* = 1.25 and N\* = 120**. Even so, the CFA was **the worst
 
 | 🇪🇸 Español | 🇬🇧 English |
 |---|---|
-| La regla que elijas importa poco; tu comportamiento importa mucho. | The rule you choose matters little; your behavior matters a lot. |
-| Comprar y mantener rinde igual que rebalancear, y es más simple. | Buy and hold performs the same as rebalancing, and it is simpler. |
-| El pánico y la persecución le cuestan al cliente típico unos US$ 92.000 en 10 años. | Panic selling and chasing cost the typical client about US$ 92,000 over 10 years. |
+| Tu comportamiento cuesta caro: 16% de tu resultado típico. | Your behavior is expensive: 16% of your typical result. |
+| Comprar y mantener empata con la mejor banda (50%) y es más simple; si el mercado cambia, conviene re-optimizar. | Buy and hold ties with the best band (50%) and is simpler; if the market changes, re-optimizing pays off. |
+| El pánico y la persecución le cuestan al cliente de referencia unos US$ 53.600 en 10 años. | Panic selling and chasing cost the reference client about US$ 53,600 over 10 years. |
 | El valor PT es satisfacción, no dólares; en dólares seguros equivale a US$ 356.000. | The PT value is satisfaction, not dollars; in sure dollars it equals US$ 356,000. |
 | b\* = 50% significa que, con estos datos, lo mejor es no tocar el portafolio. | b\* = 50% means that, with this data, the best move is to leave the portfolio alone. |
 | Usamos CVaR porque al cliente le duelen las caídas, no las subidas. | We used CVaR because the client is hurt by drops, not by rallies. |
 | Todas las reglas se probaron en los mismos 1000 futuros: la diferencia es la regla, no la suerte. | Every rule was tested on the same 1,000 futures: the difference is the rule, not luck. |
 | Ajustamos con unos futuros y evaluamos con otros, para no hacernos trampa. | We tuned on some futures and evaluated on others, so we don't fool ourselves. |
 | Espera ver tu portafolio caer alrededor de 21% en algún momento: es parte del plan. | Expect to see your portfolio drop about 21% at some point: it is part of the plan. |
-| Vender en pánico pierde 12 veces por cada vez que gana. | Panic selling loses 12 times for every time it wins. |
+| Vender en pánico deja peor en 46% de los futuros y mejor en 7%. | Panic selling ends worse in 46% of the futures and better in 7%. |

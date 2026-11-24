@@ -46,7 +46,7 @@ TXT = {
         "bias_override": "Modificar los sesgos del perfil",
         "panic": "Vende en pánico",
         "d": "Caída que dispara la venta (%)",
-        "r": "Rebote para volver a invertir (%)",
+        "r": "Rebote del mercado para volver a invertir (%)",
         "phi": "Fracción que vende (%)",
         "chase": "Persigue rendimientos",
         "kappa": "Fracción que mueve a los ganadores (%)",
@@ -96,9 +96,10 @@ TXT = {
         "when": "¿Cuándo cambiaría la recomendación?",
         "when_md": "- **Si tus costos de transacción suben mucho**, la regla de no operar (comprar y mantener) gana terreno.\n"
                    "- **Si cambia tu aversión a pérdidas**, cambia tu portafolio: vuelve a responder el cuestionario.\n"
-                   "- **Si no puedes seguir la regla en las caídas**, lo más importante es la disciplina: el costo de los "
-                   "sesgos suele ser mayor que la diferencia entre reglas.\n"
-                   "- **Si cambia el mercado** respecto de 2008–2026, el asesor debe volver a ajustar los parámetros.",
+                   "- **Si no puedes seguir la regla en las caídas**, lo más importante es la disciplina: mira arriba cuánto "
+                   "te cuestan tus sesgos.\n"
+                   "- **Si el mercado cambia** respecto de la historia con que se armó tu portafolio, re-optimizar cada año "
+                   "puede ser mejor: en las pruebas fuera de muestra del informe le ganó a comprar y mantener.",
         "detail": "Detalle estadístico (para el asesor)",
     },
     "en": {
@@ -125,7 +126,7 @@ TXT = {
         "bias_override": "Change the profile's biases",
         "panic": "Panic-sells",
         "d": "Drop that triggers the sale (%)",
-        "r": "Rebound needed to invest again (%)",
+        "r": "Market rebound needed to invest again (%)",
         "phi": "Fraction sold (%)",
         "chase": "Chases performance",
         "kappa": "Fraction moved into the winners (%)",
@@ -176,9 +177,10 @@ TXT = {
         "when": "When would the recommendation change?",
         "when_md": "- **If your transaction costs rise a lot**, the no-trading rule (buy and hold) gains ground.\n"
                    "- **If your loss aversion changes**, your portfolio changes: answer the questionnaire again.\n"
-                   "- **If you cannot follow the rule during drops**, discipline matters most: the cost of the biases "
-                   "is usually larger than the difference between rules.\n"
-                   "- **If the market changes** compared with 2008–2026, the advisor should re-tune the parameters.",
+                   "- **If you cannot follow the rule during drops**, discipline matters most: see above how much your "
+                   "biases cost you.\n"
+                   "- **If the market changes** compared with the history used to build your portfolio, re-optimizing every "
+                   "year may be better: it beat buy and hold in the report's out-of-sample tests.",
         "detail": "Statistical detail (for the advisor)",
     },
 }

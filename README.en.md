@@ -61,24 +61,32 @@ Initial wealth US$ 100,000, 10 years, 1,000 evaluation scenarios. Source: notebo
 
 | Policy | Mean PT value [95% CI] | Certainty equivalent | Final wealth P5 | Median | P95 | Median max. drawdown |
 |---|---|---|---|---|---|---|
-| Buy and hold | 2.286 [2.202, 2.371] | US$ 355,928 | US$ 151,370 | US$ 326,297 | US$ 703,184 | 20.8% |
-| Band rebalancing (b* = 50%) | 2.287 [2.202, 2.371] | US$ 355,966 | US$ 151,370 | US$ 326,297 | US$ 703,184 | 20.8% |
-| Annual re-optimization (θ* = 1.25, N* = 120) | 1.909 [1.813, 2.005] | US$ 308,474 | US$ 112,667 | US$ 269,774 | US$ 701,072 | 29.6% |
-| Panic selling | 1.719 [1.619, 1.819] | US$ 285,077 | US$ 88,853 | US$ 246,408 | US$ 692,301 | 20.4% |
-| Performance chasing | 1.938 [1.866, 2.010] | US$ 312,090 | US$ 141,501 | US$ 289,580 | US$ 601,938 | 19.8% |
-| You as you are (panic + chasing) | 1.513 [1.427, 1.599] | US$ 260,095 | US$ 88,045 | US$ 234,375 | US$ 596,097 | 19.8% |
+| Buy and hold | 2.286 [2.202, 2.371] | US$ 355,928 | US$ 151,370 | US$ 326,297 | US$ 703,185 | 20.8% |
+| Band rebalancing (b* = 50%) | 2.287 [2.202, 2.371] | US$ 355,966 | US$ 151,370 | US$ 326,297 | US$ 703,185 | 20.8% |
+| Annual re-optimization (θ* = 1.25, N* = 120) | 1.909 [1.813, 2.005] | US$ 308,474 | US$ 112,667 | US$ 269,775 | US$ 701,073 | 29.6% |
+| Panic selling | 2.126 [2.040, 2.213] | US$ 335,678 | US$ 133,340 | US$ 304,734 | US$ 699,368 | 20.9% |
+| Performance chasing | 1.938 [1.866, 2.010] | US$ 312,090 | US$ 141,501 | US$ 289,581 | US$ 601,939 | 19.8% |
+| You as you are (panic + chasing) | 1.830 [1.755, 1.905] | US$ 298,683 | US$ 127,025 | US$ 272,656 | US$ 599,908 | 19.8% |
 
-**How to read it.** The PT value is a satisfaction score, not dollars. The **certainty equivalent** turns it into dollars: it is the sure amount the client values as much as the policy with all its risk. For example, buy and hold is worth as much to this client as about US$ 356,000 for sure in 10 years; "you as you are" is worth about US$ 260,000.
+**How to read it.** The PT value is a satisfaction score, not dollars. The **certainty equivalent** turns it into dollars: it is the sure amount the client values as much as the policy with all its risk. For example, buy and hold is worth as much to this client as about US$ 356,000 for sure in 10 years; "you as you are" is worth about US$ 299,000.
 
 **Recommendation: buy and hold the MILP portfolio.**
-- **It cannot be told apart from the band rule.** The 95% CI of the paired PT-value difference, [−0.0009, 0.0003], includes 0, and buy and hold is simpler. The optimal band width ended at the top of the grid: with this data, rebalancing adds no value, because trimming the winners (technology and gold) back to the target weights costs return.
-- **Re-optimizing every year is significantly worse.** It turns the portfolio over a lot and chases the recent window.
-- **Behavior matters more than the rule.** With both biases, the reference client loses **US$ 91,923 at the median** compared with discipline (95% CI of the mean cost: US$ 83,944 to 96,493) and ends worse in 88% of the scenarios.
+- **It cannot be told apart from the band rule.** The 95% CI of the paired PT-value difference, [−0.0009, 0.0003], includes 0, and buy and hold is simpler. The optimal band width ended at the top of the grid: with this data, rebalancing adds no value. Without rebalancing, the weight of the highest-return asset grows (XLK goes from 35% to a median of 50%; gold falls from 35% to 24%), and the objective barely penalizes the extra risk, because only 0.4% of the futures end in a loss.
+- **Re-optimizing every year is significantly worse in this evaluation.** Note: the evaluation builds the portfolio with the same history the futures are drawn from, which favors buy and hold (see the out-of-sample test).
+- **Behavior is expensive.** With both biases, the reference client loses **US$ 53,641 at the median** (16%) compared with discipline (95% CI of the mean cost: US$ 53,240 to 61,201) and ends worse in 86% of the scenarios. Performance chasing (US$ 36,716) costs more than panic selling (US$ 21,563).
 
 **When it would change:**
 - With λ = 1, λ = 4, 50 bp costs or a 4% annual goal, the recommendation did not change in the sensitivity analysis.
 - It would change if the client cannot follow the rule during drops: then discipline is the priority, not the rule.
-- It would change if the market regime differs from 2008–2026: the parameters must be re-tuned with new data.
+- **It changes if the future does not look like the history used to build the portfolio.** In the out-of-sample test (portfolio built with data before the cut, 300 futures drawn from the data after it), annual re-optimization beats buy and hold at all three cuts:
+
+  | Cut | Buy and hold (PT · median) | Re-optimization (θ*, N*) | Untuned re-optimization (θ = 1, N = 60) |
+  |---|---|---|---|
+  | 2014-12 | 1.320 · US$ 221,312 | 1.947 · US$ 285,061 | 1.980 · US$ 294,196 |
+  | 2017-12 | 2.114 · US$ 290,625 | 2.669 · US$ 340,271 | 3.018 · US$ 384,065 |
+  | 2019-12 | 1.984 · US$ 272,143 | 3.271 · US$ 415,158 | 3.639 · US$ 445,248 |
+
+- **Risk rises if it is never reviewed.** After 10 years, buy and hold's weights exceed the client's CVaR limit in 79% of the futures (median 7.85% versus 7.50%). A yearly review is advisable.
 
 ## Where each result comes from
 
@@ -96,9 +104,11 @@ Every number in this README and in the report is printed by a notebook cell. The
 | θ* = 1.25, N* = 120 and the CFA heat map | §7, the `cfa_tab = tune(…)` table and chart | `tune` | `data/tuned_params.json` |
 | Main table: PT value, CI, certainty equivalent, P5/P50/P95, drawdown, costs, turnover | §8, the `table = results_table(results, REF, W0)` cell | `results_table`, `certainty_equivalent` | — |
 | Paired differences against the bands (CI [−0.0009, 0.0003]) and probability of beating them | §8, the `paired = paired_comparison(…)` table | `paired_comparison` | — |
-| Cost of each behavior (US$ 91,923 at the median, 88% of scenarios) | §8, the `costs = behavior_costs(…)` table | `behavior_costs` | — |
+| Cost of each behavior (US$ 53,641 at the median, 86% of scenarios) | §8, the `costs = behavior_costs(…)` table | `behavior_costs` | — |
 | Fan chart and final-wealth box plot | §8, the `fan_figure` / `terminal_figure` cell | [`core/plots.py`](core/plots.py) | — |
 | Sensitivity (λ = 1, λ = 4, 50 bp, 4% goal) | §9, the `sens` table | `recommend` | — |
+| Diagnostics: futures in loss (0.4%), weight drift, final CVaR (79% above the limit) | §9, the `# Diagnóstico` cell | `pt_scores`, `hist_cvar` | — |
+| Out-of-sample test (three cuts) | §9, the `oos` table | `evaluate`, `summarize` | — |
 | Final recommendation and when it would change | §9, the cell `rec = recommend(results, REF, W0, W0, CANDIDATES)` | `recommend` | — |
 
 **The dashboard's numbers are different on purpose.** The app simulates **500** scenarios (seed 7777) for **whoever answers the questionnaire** (by default λ = 2, α = β = 0.76 and no biases), so its amounts do not match the report's reference client. The functions and the recommendation rule are the same.
@@ -126,11 +136,13 @@ streamlit run app.py                 # the dashboard
 jupyter notebook portafolio_conductual.ipynb   # the report (requires: pip install notebook)
 ```
 
-Running the full notebook takes about 15 minutes. It downloads the data again with yfinance and regenerates `core/`, `app.py` and `data/`. Gurobi works with the restricted license that comes with `pip install gurobipy`: the largest model has about 275 variables, within the limit.
+Running the full notebook takes about 20 minutes. It downloads the data again with yfinance and regenerates `core/`, `app.py` and `data/`. Gurobi works with the restricted license that comes with `pip install gurobipy`: the largest model has about 275 variables, within the limit.
 
 ## Limitations
 
-- The bootstrap and the MILP use the same history (2008–2026), so the results reflect that period, in which technology and gold did especially well.
+- The bootstrap and the MILP use the same history (2008–2026), so the results reflect that period, which was very good for technology (XLK: 18.6% a year).
+- In the out-of-sample test the futures come from a short period (82 to 142 months), which favors the CFA.
+- θ* and N* ended at the edge of their grid.
 - The questionnaire has not been validated with real people.
 - Taxes, contributions, withdrawals, inflation and cumulative prospect theory's probability weighting are not modeled.
 - It is an educational tool, not investment advice.
