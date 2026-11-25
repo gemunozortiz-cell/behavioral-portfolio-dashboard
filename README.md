@@ -22,6 +22,7 @@ Una herramienta para que un asesor financiero haga tres cosas con un cliente:
 
 | Ruta | Contenido |
 |---|---|
+| [`Informe_ES.md`](Informe_ES.md) · [`Report_EN.md`](Report_EN.md) | El informe sin código, en español y en inglés: modelo de Powell, políticas, evaluación y recomendación. |
 | [`portafolio_conductual.ipynb`](portafolio_conductual.ipynb) | El informe completo: datos, modelo de Powell, cuestionario, MILP, simulador, políticas, ajuste, evaluación, sensibilidad y recomendación. Incluye las pruebas (`assert`). |
 | [`app.py`](app.py) | El dashboard de Streamlit (en español e inglés). |
 | [`core/`](core) | La lógica compartida por el notebook y la app: `profile` (cuestionario), `portfolio` (MILP), `scenarios` (bootstrap), `policies`, `simulator`, `evaluation`, `plots` e `i18n` (nombres en inglés). |

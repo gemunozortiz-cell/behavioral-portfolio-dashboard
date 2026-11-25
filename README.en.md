@@ -22,6 +22,7 @@ A tool that lets a financial advisor do three things with a client:
 
 | Path | Content |
 |---|---|
+| [`Report_EN.md`](Report_EN.md) · [`Informe_ES.md`](Informe_ES.md) | The report without code, in English and Spanish: Powell model, policies, evaluation and recommendation. |
 | [`portafolio_conductual.ipynb`](portafolio_conductual.ipynb) | The full report: data, Powell model, questionnaire, MILP, simulator, policies, tuning, evaluation, sensitivity and recommendation. It includes the tests (`assert`). |
 | [`app.py`](app.py) | The Streamlit dashboard (Spanish and English). |
 | [`core/`](core) | The logic shared by the notebook and the app: `profile` (questionnaire), `portfolio` (MILP), `scenarios` (bootstrap), `policies`, `simulator`, `evaluation`, `plots` and `i18n` (English names). |
